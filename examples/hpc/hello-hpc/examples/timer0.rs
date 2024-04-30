@@ -14,8 +14,12 @@ fn main() -> !
     print_example_name!();
     sprintln!("Timer0 example");
     let cnt_start = timer0_get_count();
+    let ctrl_reg = timer0_get_ctrl_reg();
+    sprintln!("Timer0 control register initial state: {}", ctrl_reg);
     sprintln!("Timer0 counter value at start: {}", cnt_start);
     timer0_enable();
+    let ctrl_reg = timer0_get_ctrl_reg();
+    sprintln!("Timer0 control register after start: {}", ctrl_reg);
     for i in 1..1_000_000
     {
         continue;
