@@ -18,15 +18,27 @@ use crate::{mmap::TIMER0_BASE_ADDR, write_u32, read_u32};
 extern crate bit_field;
 use bit_field::BitField;
 
-const TIMER0_COUNTER_REG_OFFSET: usize = 0x8;
-const TIMER0_CTRL_REG_OFFSET: usize = 0x0;
+// TODO: Ask Henri, implement correctly and REVERSE conditions
+#[cfg(any(feature = "vp"))]
+mod timer_interface {
+    pub const TIMER0_CTRL_REG_OFFSET: usize = 0x0;
+    pub const TIMER0_COUNTER_REG_OFFSET: usize = 0x8;
+    pub const TIMER0_ENABLE_BIT: u32 = 0b0;
+}
 
-const TIMER0_ENABLE_BIT: u32 = 0b0;
+#[cfg(not(feature = "vp"))]
+mod timer_interface {
+    pub const TIMER0_COUNTER_REG_OFFSET: usize = 0x0;
+    pub const TIMER0_CTRL_REG_OFFSET: usize = 0x4;
+    pub const TIMER0_CMP_REG_OFFSET: usize = 0x8;
+    pub const TIMER0_ENABLE_BIT: u32 = 0b0;
+}
 
 
 #[inline]
 pub fn timer0_enable()
 {
+    use timer_interface::*;
     // Read register
     let mut reg = read_u32(TIMER0_BASE_ADDR + TIMER0_CTRL_REG_OFFSET);
     // Make enable bit 1
@@ -38,6 +50,7 @@ pub fn timer0_enable()
 #[inline]
 pub fn timer0_disable()
 {
+    use timer_interface::*;
     // Read register
     let mut reg = read_u32(TIMER0_BASE_ADDR + TIMER0_CTRL_REG_OFFSET);
     // Write 0 to bit 0 but leave all other bits untouched
@@ -47,13 +60,17 @@ pub fn timer0_disable()
 }
 
 #[inline]
+#[cfg(debug_assertions)]
 pub fn timer0_get_count() -> u32 
 {
+    use timer_interface::*;
     return read_u32(TIMER0_BASE_ADDR + TIMER0_COUNTER_REG_OFFSET);
 }
 
 #[inline]
+#[cfg(debug_assertions)]
 pub fn timer0_get_ctrl_reg() -> u32
 {
+    use timer_interface::*;
     return read_u32(TIMER0_BASE_ADDR + TIMER0_CTRL_REG_OFFSET);
 }
