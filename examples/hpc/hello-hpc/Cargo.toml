@@ -12,3 +12,4 @@ headsail-bsp = { version = "0.1.0", path = "../../headsail-bsp", features = [
     "hpc-rt",
     "vp",
 ] }
+uart = "0.1.2"

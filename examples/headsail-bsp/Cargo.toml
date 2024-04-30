@@ -48,3 +48,8 @@ required-features = ["rt"]
 name = "timer0"
 path = "examples/timer0.rs"
 required-features = ["rt"]
+
+[[example]]
+name = "uart1"
+path = "examples/uart1.rs"
+required-features = ["rt"]
