@@ -12,6 +12,8 @@ pub use riscv;
 pub use riscv_rt as rt;
 pub use ufmt;
 
+#[cfg(feature = "alloc")]
+pub mod alloc;
 #[cfg(feature = "hpc")]
 mod hpc;
 mod mmap;
@@ -59,6 +61,11 @@ fn setup_interrupt_vector() {
         let bits = _trap_vector as usize;
         mtvec::write(bits, mtvec::TrapMode::Vectored);
     }
+}
+
+#[cfg(feature = "alloc")]
+pub fn init_alloc() {
+    unsafe { alloc::init_heap() };
 }
 
 // The vector table
